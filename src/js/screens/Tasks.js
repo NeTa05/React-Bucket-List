@@ -23,7 +23,7 @@ import Button from 'grommet/components/Button';
 import NavControl from '../components/NavControl';
 
 import {
-  loadTasks, unloadTasks, deleteTask
+  loadTasks, unloadTasks, deleteTask, doneTask
 } from '../actions/tasks';
 
 import { pageLoaded } from './utils';
@@ -35,7 +35,7 @@ class Tasks extends Component {
   }
 
   _done(id){
-    console.log('edit', id);
+    this.props.dispatch(doneTask(id));
   }
 
   _delete(id){
@@ -46,9 +46,18 @@ class Tasks extends Component {
     const { error, tasks } = this.props;
     const { intl } = this.context;
 
-    const tasksNode = (tasks || []).map(task => (
+    const tasksNode = (tasks || []).map(task => {
 
-      <TableRow  key={`task_${task.id}`}>
+
+
+      let deleteButton;
+      if (['Done', 'Fail'].includes(task.status)) {
+        deleteButton = <Button 
+            label='Delete'
+            onClick={this._delete.bind(this, task.id)} />
+      }
+
+      return <TableRow  key={`task_${task.id}`}>
         <td>
           {task.id}
         </td>
@@ -65,12 +74,12 @@ class Tasks extends Component {
           <Button 
             label='Done'
             onClick={this._done.bind(this, task.id)} />
-          <Button 
-            label='Delete'
-            onClick={this._delete.bind(this, task.id)} />
+          {deleteButton}
         </td>
       </TableRow>      
-    ));
+    }
+
+    );
    
     return (
       <Table>

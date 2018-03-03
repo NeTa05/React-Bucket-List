@@ -1,4 +1,4 @@
-import { TASKS_LOAD, TASKS_UNLOAD, TASK_LOAD, TASK_UNLOAD, TASK_DELETE } from '../actions';
+import { TASKS_LOAD, TASKS_UNLOAD, TASK_LOAD, TASK_UNLOAD, TASK_DELETE, TASK_DONE } from '../actions';
 import {
   watchTasks, unwatchTasks, watchTask, unwatchTask
 } from '../api/tasks';
@@ -10,6 +10,10 @@ export function loadTasks() {
 
 export function deleteTask(id) {
   return { type: TASK_DELETE, payload: id }
+}
+
+export function doneTask(id) {
+  return { type: TASK_DONE, payload: id }
 }
 
 export function unloadTasks() {
