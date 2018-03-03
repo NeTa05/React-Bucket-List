@@ -14,6 +14,8 @@ export const TASKS_LOAD = 'TASKS_LOAD';
 export const TASKS_UNLOAD = 'TASKS_UNLOAD';
 export const TASK_LOAD = 'TASK_LOAD';
 export const TASK_UNLOAD = 'TASK_UNLOAD';
+export const TASK_DELETE = 'TASK_DELETE';
+
 
 // Nav
 export const NAV_ACTIVATE = 'NAV_ACTIVATE';

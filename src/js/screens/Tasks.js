@@ -7,6 +7,8 @@ import Box from 'grommet/components/Box';
 import Header from 'grommet/components/Header';
 import Label from 'grommet/components/Label';
 import List from 'grommet/components/List';
+import Table from 'grommet/components/Table';
+import TableRow from 'grommet/components/TableRow';
 import ListItem from 'grommet/components/ListItem';
 import Notification from 'grommet/components/Notification';
 import Meter from 'grommet/components/Meter';
@@ -14,11 +16,14 @@ import Paragraph from 'grommet/components/Paragraph';
 import Value from 'grommet/components/Value';
 import Spinning from 'grommet/components/icons/Spinning';
 import { getMessage } from 'grommet/utils/Intl';
+import Button from 'grommet/components/Button';
+
+
 
 import NavControl from '../components/NavControl';
 
 import {
-  loadTasks, unloadTasks
+  loadTasks, unloadTasks, deleteTask
 } from '../actions/tasks';
 
 import { pageLoaded } from './utils';
@@ -29,83 +34,69 @@ class Tasks extends Component {
     this.props.dispatch(loadTasks());
   }
 
-  componentWillUnmount() {
-    this.props.dispatch(unloadTasks());
+  _done(id){
+    console.log('edit', id);
+  }
+
+  _delete(id){
+    this.props.dispatch(deleteTask(id));
   }
 
   render() {
     const { error, tasks } = this.props;
     const { intl } = this.context;
 
-    let errorNode;
-    let listNode;
-    if (error) {
-      errorNode = (
-        <Notification
-          status='critical'
-          size='large'
-          state={error.message}
-          message='An unexpected error happened, please try again later'
-        />
-      );
-    } else if (tasks.length === 0) {
-      listNode = (
-        <Box
-          direction='row'
-          responsive={false}
-          pad={{ between: 'small', horizontal: 'medium', vertical: 'medium' }}
-        >
-          <Spinning /><span>Loading...</span>
-        </Box>
-      );
-    } else {
-      const tasksNode = (tasks || []).map(task => (
-        <ListItem
-          key={`task_${task.id}`}
-          justify='between'
-        >
-          <Label><Anchor path={`/tasks/${task.id}`} label={task.name} /></Label>
-          <Box
-            direction='row'
-            responsive={false}
-            pad={{ between: 'small' }}
-          >
-            <Value
-              value={task.percentComplete}
-              units='%'
-              align='start'
-              size='small'
-            />
-            <Meter value={task.percentComplete} />
-          </Box>
-        </ListItem>
-      ));
+    const tasksNode = (tasks || []).map(task => (
 
-      listNode = (
-        <List>
-          {tasksNode}
-        </List>
-      );
-    }
-
+      <TableRow  key={`task_${task.id}`}>
+        <td>
+          {task.id}
+        </td>
+        <td className='secondary'>
+          {task.description}
+        </td>
+        <td className='secondary'>
+          {task.deadline}
+        </td>
+        <td className='secondary'>
+          {task.status}
+        </td>
+        <td className='secondary'>
+          <Button 
+            label='Done'
+            onClick={this._done.bind(this, task.id)} />
+          <Button 
+            label='Delete'
+            onClick={this._delete.bind(this, task.id)} />
+        </td>
+      </TableRow>      
+    ));
+   
     return (
-      <Article primary={true}>
-        <Header
-          direction='row'
-          justify='between'
-          size='large'
-          pad={{ horizontal: 'medium', between: 'small' }}
-        >
-          <NavControl name={getMessage(intl, 'Tasks')} />
-        </Header>
-        {errorNode}
-        <Box pad={{ horizontal: 'medium' }}>
-          <Paragraph size='large'>
-            The backend here is using websocket.
-          </Paragraph>
-        </Box>
-        {listNode}
-      </Article>
+      <Table>
+        <thead>
+          <tr>
+            <th>
+              Id
+            </th>
+            <th>
+              Description
+            </th>
+            <th>
+              Deadline
+            </th>
+            <th>
+              Status
+            </th>
+            <th>
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {tasksNode}
+        </tbody>
+      </Table>
     );
   }
 }

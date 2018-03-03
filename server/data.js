@@ -7,7 +7,7 @@ export const tasks = [
   {
     id: 'task-1',
     name: 'Initializing instance',
-    percentComplete: 0,
+    deadline: 0,
     status: 'Waiting'
   },
   {

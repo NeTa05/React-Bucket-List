@@ -12,7 +12,9 @@ import Login from '../screens/Login';
 import Dashboard from '../screens/Dashboard';
 import Tasks from '../screens/Tasks';
 import Task from '../screens/Task';
+
 import NotFound from '../screens/NotFound';
+import Manage from '../screens/Manage';
 
 class Main extends Component {
   constructor() {
@@ -45,11 +47,10 @@ class Main extends Component {
           >
             {nav}
             <Switch>
-              <Route exact={true} path='/' component={Dashboard} />
-              <Route path='/dashboard' component={Dashboard} />
+              <Route exact={true} path='/' component={Tasks} />
+              <Route path='/dashboard' component={Tasks} />
               <Route path='/login' component={Login} />
-              <Route path='/tasks/:id' component={Task} />
-              <Route path='/tasks' component={Tasks} />
+              <Route path='/manage' component={Manage} />
               <Route path='/*' component={NotFound} />
             </Switch>
           </Split>

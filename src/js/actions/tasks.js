@@ -1,19 +1,15 @@
-import { TASKS_LOAD, TASKS_UNLOAD, TASK_LOAD, TASK_UNLOAD } from '../actions';
+import { TASKS_LOAD, TASKS_UNLOAD, TASK_LOAD, TASK_UNLOAD, TASK_DELETE } from '../actions';
 import {
   watchTasks, unwatchTasks, watchTask, unwatchTask
 } from '../api/tasks';
 
 export function loadTasks() {
-  return dispatch => (
-    watchTasks()
-      .on('success',
-        payload => dispatch({ type: TASKS_LOAD, payload })
-      )
-      .on('error',
-        payload => dispatch({ type: TASKS_LOAD, error: true, payload })
-      )
-      .start()
-  );
+  const tasks = JSON.parse(window.localStorage.getItem('tasks'))
+  return { type: TASKS_LOAD, payload: {tasks} }
+}
+
+export function deleteTask(id) {
+  return { type: TASK_DELETE, payload: id }
 }
 
 export function unloadTasks() {
