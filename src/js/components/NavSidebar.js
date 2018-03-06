@@ -17,11 +17,9 @@ import { navActivate } from '../actions/nav';
 class NavSidebar extends Component {
   constructor() {
     super();
-    this._onClose = this._onClose.bind(this);
   }
 
   _onClose() {
-    this.props.dispatch(navActivate(false));
   }
 
   render() {
@@ -34,16 +32,10 @@ class NavSidebar extends Component {
     return (
       <Sidebar colorIndex='neutral-3' fixed={true}>
         <Header size='large' justify='between' pad={{ horizontal: 'medium' }}>
-          <Title onClick={this._onClose} a11yTitle='Close Menu'>
+          <Title>
             <Logo />
             <span>Bucket List</span>
           </Title>
-          <Button
-            icon={<CloseIcon />}
-            onClick={this._onClose}
-            plain={true}
-            a11yTitle='Close Menu'
-          />
         </Header>
         <Menu fill={true} primary={true}>
           {links}

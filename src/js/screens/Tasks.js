@@ -17,6 +17,7 @@ import Value from 'grommet/components/Value';
 import Spinning from 'grommet/components/icons/Spinning';
 import { getMessage } from 'grommet/utils/Intl';
 import Button from 'grommet/components/Button';
+import Status from 'grommet/components/icons/Status';
 
 
 
@@ -42,13 +43,34 @@ class Tasks extends Component {
     this.props.dispatch(deleteTask(id));
   }
 
+  getIcon({status}){
+    let icon 
+    switch(status) {
+      case 'Progress': {
+        icon =  'warning'
+        break;
+      }
+      case 'Fail': {
+        icon = 'critical'
+        break;
+      }
+      case 'Done':{
+        icon =  'ok'
+        break;
+      }
+      default:{
+        icon =  'unknown'
+        break;
+      }
+    }
+    return <Status value={`${icon}`} />
+  }
+
   render() {
     const { error, tasks } = this.props;
     const { intl } = this.context;
 
     const tasksNode = (tasks || []).map(task => {
-
-
 
       let deleteButton;
       if (['Done', 'Fail'].includes(task.status)) {
@@ -56,7 +78,8 @@ class Tasks extends Component {
             label='Delete'
             onClick={this._delete.bind(this, task.id)} />
       }
-
+      let icon = this.getIcon(task)
+      
       return <TableRow  key={`task_${task.id}`}>
         <td>
           {task.id}
@@ -68,7 +91,7 @@ class Tasks extends Component {
           {task.deadline}
         </td>
         <td className='secondary'>
-          {task.status}
+          {icon} {task.status}
         </td>
         <td className='secondary'>
           <Button 
