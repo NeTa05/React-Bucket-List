@@ -20,7 +20,6 @@ import FormField from 'grommet/components/FormField';
 import TextInput from 'grommet/components/TextInput';
 import DateTime from 'grommet/components/DateTime';
 
-
 import {
   loadTask, unloadTask
 } from '../actions/tasks';
@@ -30,43 +29,99 @@ import { pageLoaded } from './utils';
 class Manage extends Component {
   componentDidMount() {
     pageLoaded('Manage');
-    
   }
 
-  _setDate(date) {
-    console.log(date);
+  constructor(props) {
+    super(props);
+    this.state = {
+      description: '',
+      deadline: this._getNextYear(),
+      errors: {
+        description: {
+          message : ''
+        },
+        deadline: {
+          message : ''
+        }
+      }
+    };
+  }
+
+  _handleChangeDescription({ target: { value : description } }) {
+    this.setState({description}, function() {
+      this._validateDescription()
+    });
+  }
+
+  _handleSubmit(event) {
+    event.preventDefault();
+    if (this._canSubmit()) {
+      alert('An essay was submitted: ' + JSON.stringify(this.state));
+    }
+  }
+
+  _validateDescription() {
+    const message = this.state.description.length > 5 ?  'May not be greater than 150.' : ''
+    this.setState({
+      errors: { ...this.state.errors, 'description' : {message} },
+    });
+  }
+
+  _onChangeDate(deadline) {
+    this.setState({deadline});
+    console.log(deadline);
+  }
+
+  _getNextYear() {
+    let nextYear = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+    return nextYear.getMonth() + 1 + '/' + nextYear.getDate() + '/' + nextYear.getFullYear()
+  }
+
+  _canSubmit() {
+    //TODO: Validate correct date format
+    return this.state.description.length > 0 && this.state.deadline.length > 0
   }
 
   render() {
-    
-    return (<Form>
-            <Header>
-              <Heading>
-                Add Task
-              </Heading>
-            </Header>
-            <FormFields>
-              <FormField label='Description'
-                error='sample error'>
-                <TextInput />
-              </FormField>
-              <FormField>
-                <DateTime
-                  id='deadline'
-                  name='deadline'
-                  format='M/D/YYYY'
-                  onChange={this._setDate}
-                />
-              </FormField>
-              <t />
-            </FormFields>
-            <Footer pad={{"vertical": "medium"}}>
-              <Button label='Submit'
-                type='submit'
-                primary={true}
-                 />
-            </Footer>
-          </Form>
+    let error = this.state.errors.description.message
+    return (
+            <Box direction='row'
+              justify='center'
+              align='center'>
+              <Form>
+                <Header>
+                  <Heading>
+                    Add Task
+                  </Heading>
+                </Header>
+                <FormFields>
+                  <FormField label='Description'
+                    error={`${error}`}>
+                    <TextInput 
+                      id='description'
+                      onDOMChange={this._handleChangeDescription.bind(this)}
+                      />
+                  </FormField>
+                  <FormField>
+                    <DateTime
+                      id='deadline'
+                      format='M/D/YYYY'
+                      onChange={this._onChangeDate.bind(this)}
+                      value={this.state.deadline}
+                    />
+                  </FormField>
+                  <t />
+                </FormFields>
+                <Footer pad={{"vertical": "medium"}}>
+                  <Button label='Submit'
+                    type='submit'
+                    primary={true}
+                    disabled={true}
+                    onClick={this._handleSubmit.bind(this)}
+                     />
+                </Footer>
+              </Form>
+            </Box>
           )
   }
 }

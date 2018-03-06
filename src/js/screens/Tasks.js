@@ -43,7 +43,7 @@ class Tasks extends Component {
     this.props.dispatch(deleteTask(id));
   }
 
-  getIcon({status}){
+  _getIcon({status}){
     let icon 
     switch(status) {
       case 'Progress': {
@@ -78,7 +78,7 @@ class Tasks extends Component {
             label='Delete'
             onClick={this._delete.bind(this, task.id)} />
       }
-      let icon = this.getIcon(task)
+      let icon = this._getIcon(task)
       
       return <TableRow  key={`task_${task.id}`}>
         <td>
