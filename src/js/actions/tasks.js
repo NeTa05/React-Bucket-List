@@ -1,4 +1,4 @@
-import { TASKS_LOAD, TASKS_UNLOAD, TASK_LOAD, TASK_UNLOAD, TASK_DELETE, TASK_DONE } from '../actions';
+import { TASKS_LOAD, TASKS_UNLOAD, TASK_LOAD, TASK_UNLOAD, TASK_DELETE, TASK_DONE, TASK_ADD } from '../actions';
 import {
   watchTasks, unwatchTasks, watchTask, unwatchTask
 } from '../api/tasks';
@@ -14,6 +14,11 @@ export function deleteTask(id) {
 
 export function doneTask(id) {
   return { type: TASK_DONE, payload: id }
+}
+
+export function addTask(task) {
+  const tasks = JSON.parse(window.localStorage.getItem('tasks'))
+  return { type: TASK_ADD, payload: {tasks, task} }
 }
 
 export function unloadTasks() {

@@ -46,7 +46,7 @@ class Tasks extends Component {
   _getIcon({status}){
     let icon 
     switch(status) {
-      case 'Progress': {
+      case 'In Progress': {
         icon =  'warning'
         break;
       }

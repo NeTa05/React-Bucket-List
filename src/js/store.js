@@ -5,21 +5,21 @@ import thunk from 'redux-thunk';
 if (window.localStorage.getItem('tasks') === null ){
 	window.localStorage.setItem('tasks', JSON.stringify([
     {
-      id: 'task-1',
+      id: 1,
       description: 'Initializing instance',
-      deadline: 0,
-      status: 'Progress'
+      deadline: '3/6/2019',
+      status: 'In Progress'
     },
     {
-      id: 'task-2',
+      id: 2,
       description: 'Adding components',
-      deadline: 0,
+      deadline: '3/6/2019',
       status: 'Fail'
     },
     {
-      id: 'task-3',
+      id: 3,
       description: 'Testing infrastructure',
-      deadline: 0,
+      deadline: '3/6/2019',
       status: 'Done'
     }
   ]));

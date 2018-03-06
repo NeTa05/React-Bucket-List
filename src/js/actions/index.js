@@ -12,10 +12,13 @@ export const DASHBOARD_UNLOAD = 'DASHBOARD_UNLOAD';
 // Tasks
 export const TASKS_LOAD = 'TASKS_LOAD';
 export const TASKS_UNLOAD = 'TASKS_UNLOAD';
-export const TASK_LOAD = 'TASK_LOAD';
 export const TASK_UNLOAD = 'TASK_UNLOAD';
+
+
+export const TASK_LOAD = 'TASK_LOAD';
 export const TASK_DELETE = 'TASK_DELETE';
 export const TASK_DONE = 'TASK_DONE';
+export const TASK_ADD = 'TASK_ADD';
 
 
 // Nav

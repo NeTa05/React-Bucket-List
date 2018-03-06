@@ -1,4 +1,4 @@
-import { TASKS_LOAD, TASKS_UNLOAD, TASK_LOAD, TASK_UNLOAD, TASK_DELETE, TASK_DONE } from '../actions';
+import { TASKS_LOAD, TASKS_UNLOAD, TASK_LOAD, TASK_UNLOAD, TASK_DELETE, TASK_DONE, TASK_ADD } from '../actions';
 import { createReducer } from './utils';
 
 const initialState = []
@@ -29,6 +29,13 @@ const handlers = {
     window.localStorage.setItem('tasks', JSON.stringify(newTasks));
     return { tasks: newTasks }
   },
+  [TASK_ADD]: ({tasks}, action) => {
+    let newTasks = [...action.payload.tasks]
+    newTasks.push(action.payload.task)  
+    window.localStorage.setItem('tasks', JSON.stringify(newTasks));
+    return { tasks: newTasks }
+  },
+
 };
 
 export default createReducer(initialState, handlers);

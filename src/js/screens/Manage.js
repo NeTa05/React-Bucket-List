@@ -19,11 +19,10 @@ import Button from 'grommet/components/Button';
 import FormField from 'grommet/components/FormField';
 import TextInput from 'grommet/components/TextInput';
 import DateTime from 'grommet/components/DateTime';
+import Toast from 'grommet/components/Toast';
 
-import {
-  loadTask, unloadTask
-} from '../actions/tasks';
 
+import { addTask } from '../actions/tasks';
 import { pageLoaded } from './utils';
 
 class Manage extends Component {
@@ -53,15 +52,34 @@ class Manage extends Component {
     });
   }
 
+  _findLastId(){
+    const tasks = JSON.parse(window.localStorage.getItem('tasks'))
+    let maxId = 0
+    tasks.forEach(function (task) {
+      if (task.id > maxId) {
+        maxId = task.id
+      }
+    })
+    maxId++
+    return maxId
+  }
+
   _handleSubmit(event) {
     event.preventDefault();
     if (this._canSubmit()) {
-      alert('An essay was submitted: ' + JSON.stringify(this.state));
-    }
+      let task = {id: this._findLastId(), 
+                  description: this.state.description,
+                  deadline: this.state.deadline,
+                  status: 'In Progress'};
+      this.props.dispatch(addTask(task));
+      window.location = '/dashboard';
+      return
+      //alert('An essay was submitted: ' + JSON.stringify(this.state));
+    } 
   }
 
   _validateDescription() {
-    const message = this.state.description.length > 5 ?  'May not be greater than 150.' : ''
+    const message = this.state.description.length > 150 ?  'May not be greater than 150.' : ''
     this.setState({
       errors: { ...this.state.errors, 'description' : {message} },
     });
