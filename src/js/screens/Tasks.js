@@ -43,11 +43,30 @@ class Tasks extends Component {
     this.props.dispatch(deleteTask(id));
   }
 
-  _getIcon({status}){
-    let icon 
+  _getCurrentDate() {
+    let currentDate = new Date(new Date().setFullYear(new Date().getFullYear()))
+    return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
+  }
+
+  _isADateBeforeToday(deadline) {
+    let currentDate = this._getCurrentDate();
+    deadline = deadline.split('/')
+    let month = deadline[0]-1 //month starts at 0 not 1
+    let day = deadline[1]
+    let deadlineDate = new Date(deadline[2], month , day );                                                        
+    return (currentDate > deadlineDate) 
+  }
+
+  _getIcon({status, deadline}){
+    let icon = ''
     switch(status) {
       case 'In Progress': {
-        icon =  'warning'
+        if (this._isADateBeforeToday(deadline)) {
+           icon = 'critical'
+        }
+        else {
+          icon =  'warning'
+        }
         break;
       }
       case 'Fail': {
@@ -73,7 +92,7 @@ class Tasks extends Component {
     const tasksNode = (tasks || []).map(task => {
 
       let deleteButton;
-      if (['Done', 'Fail'].includes(task.status)) {
+      if (['Done', 'Fail'].includes(task.status) || this._isADateBeforeToday(task.deadline)) {
         deleteButton = <Button 
             label='Delete'
             onClick={this._delete.bind(this, task.id)} />

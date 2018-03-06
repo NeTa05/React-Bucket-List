@@ -13,8 +13,8 @@ if (window.localStorage.getItem('tasks') === null ){
     {
       id: 2,
       description: 'Adding components',
-      deadline: '3/6/2019',
-      status: 'Fail'
+      deadline: '3/6/2017',
+      status: 'In Progress'
     },
     {
       id: 3,

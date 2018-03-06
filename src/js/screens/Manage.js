@@ -19,9 +19,6 @@ import Button from 'grommet/components/Button';
 import FormField from 'grommet/components/FormField';
 import TextInput from 'grommet/components/TextInput';
 import DateTime from 'grommet/components/DateTime';
-import Toast from 'grommet/components/Toast';
-
-
 import { addTask } from '../actions/tasks';
 import { pageLoaded } from './utils';
 
@@ -65,21 +62,27 @@ class Manage extends Component {
   }
 
   _handleSubmit(event) {
-    event.preventDefault();
+    event.preventDefault()
+    this._validateDescription()
     if (this._canSubmit()) {
       let task = {id: this._findLastId(), 
                   description: this.state.description,
                   deadline: this.state.deadline,
                   status: 'In Progress'};
-      this.props.dispatch(addTask(task));
-      window.location = '/dashboard';
-      return
-      //alert('An essay was submitted: ' + JSON.stringify(this.state));
+      this.props.dispatch(addTask(task))
+      window.location = '/dashboard'
     } 
   }
 
   _validateDescription() {
-    const message = this.state.description.length > 150 ?  'May not be greater than 150.' : ''
+
+    let message = ''
+    if (this.state.description.length > 150) {
+      message = 'May not be greater than 150.'
+    }
+    else if (this.state.description.trim().length === 0 ) {
+      message = 'The field is required.' 
+    }
     this.setState({
       errors: { ...this.state.errors, 'description' : {message} },
     });
@@ -98,6 +101,10 @@ class Manage extends Component {
   _canSubmit() {
     //TODO: Validate correct date format
     return this.state.description.length > 0 && this.state.deadline.length > 0
+  }
+
+  _onKeyPressDate(event){
+     event.preventDefault()
   }
 
   render() {
@@ -125,6 +132,8 @@ class Manage extends Component {
                       id='deadline'
                       format='M/D/YYYY'
                       onChange={this._onChangeDate.bind(this)}
+                      onKeyPress={this._onKeyPressDate}
+                      onPaste={this._onKeyPressDate}
                       value={this.state.deadline}
                     />
                   </FormField>
