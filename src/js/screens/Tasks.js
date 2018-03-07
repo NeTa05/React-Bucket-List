@@ -18,6 +18,7 @@ import Spinning from 'grommet/components/icons/Spinning';
 import { getMessage } from 'grommet/utils/Intl';
 import Button from 'grommet/components/Button';
 import Status from 'grommet/components/icons/Status';
+import { getCurrentDate, isADateBeforeToday } from '../helpers/tasks.js'
 
 
 
@@ -43,25 +44,11 @@ class Tasks extends Component {
     this.props.dispatch(deleteTask(id));
   }
 
-  _getCurrentDate() {
-    let currentDate = new Date(new Date().setFullYear(new Date().getFullYear()))
-    return new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate())
-  }
-
-  _isADateBeforeToday(deadline) {
-    let currentDate = this._getCurrentDate();
-    deadline = deadline.split('/')
-    let month = deadline[0]-1 //month starts at 0 not 1
-    let day = deadline[1]
-    let deadlineDate = new Date(deadline[2], month , day );                                                        
-    return (currentDate > deadlineDate) 
-  }
-
   _getIcon({status, deadline}){
     let icon = ''
     switch(status) {
       case 'In Progress': {
-        if (this._isADateBeforeToday(deadline)) {
+        if (isADateBeforeToday(deadline)) {
            icon = 'critical'
         }
         else {
@@ -92,7 +79,7 @@ class Tasks extends Component {
     const tasksNode = (tasks || []).map(task => {
 
       let deleteButton;
-      if (['Done', 'Fail'].includes(task.status) || this._isADateBeforeToday(task.deadline)) {
+      if (['Done', 'Fail'].includes(task.status) || isADateBeforeToday(task.deadline)) {
         deleteButton = <Button 
             label='Delete'
             onClick={this._delete.bind(this, task.id)} />

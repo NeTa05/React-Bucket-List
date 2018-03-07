@@ -21,6 +21,7 @@ import TextInput from 'grommet/components/TextInput';
 import DateTime from 'grommet/components/DateTime';
 import { addTask } from '../actions/tasks';
 import { pageLoaded } from './utils';
+import { findLastId, getNextYear } from '../helpers/manage.js'
 
 class Manage extends Component {
   componentDidMount() {
@@ -31,7 +32,7 @@ class Manage extends Component {
     super(props);
     this.state = {
       description: '',
-      deadline: this._getNextYear(),
+      deadline: getNextYear(),
       errors: {
         description: {
           message : ''
@@ -50,23 +51,11 @@ class Manage extends Component {
     this._validateDescription()
   }
 
-  _findLastId(){
-    const tasks = JSON.parse(window.localStorage.getItem('tasks'))
-    let maxId = 0
-    tasks.forEach(function (task) {
-      if (task.id > maxId) {
-        maxId = task.id
-      }
-    })
-    maxId++
-    return maxId
-  }
-
   _handleSubmit(event) {
     event.preventDefault()
     this._validateDescription()
     if (this._canSubmit()) {
-      let task = {id: this._findLastId(), 
+      let task = {id: findLastId(), 
                   description: this.state.description,
                   deadline: this.state.deadline,
                   status: 'In Progress'};
@@ -91,11 +80,6 @@ class Manage extends Component {
 
   _onChangeDate(deadline) {
     this.setState({deadline})
-  }
-
-  _getNextYear() {
-    let nextYear = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
-    return nextYear.getMonth() + 1 + '/' + nextYear.getDate() + '/' + nextYear.getFullYear()
   }
 
   _canSubmit() {
