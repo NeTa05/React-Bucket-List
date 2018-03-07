@@ -35,9 +35,6 @@ class Manage extends Component {
       errors: {
         description: {
           message : ''
-        },
-        deadline: {
-          message : ''
         }
       }
     };
@@ -47,6 +44,10 @@ class Manage extends Component {
     this.setState({description}, function() {
       this._validateDescription()
     });
+  }
+
+  _handleOnBlurDescription() {
+    this._validateDescription()
   }
 
   _findLastId(){
@@ -89,8 +90,7 @@ class Manage extends Component {
   }
 
   _onChangeDate(deadline) {
-    this.setState({deadline});
-    console.log(deadline);
+    this.setState({deadline})
   }
 
   _getNextYear() {
@@ -99,7 +99,6 @@ class Manage extends Component {
   }
 
   _canSubmit() {
-    //TODO: Validate correct date format
     return this.state.description.length > 0 && this.state.deadline.length > 0
   }
 
@@ -107,8 +106,14 @@ class Manage extends Component {
      event.preventDefault()
   }
 
+  _onKeyDownDate(event) {
+    var key = event.keyCode || event.charCode;
+    if( key == 8 || key == 46 )
+      event.preventDefault()
+  } 
+
   render() {
-    let error = this.state.errors.description.message
+    let descriptionError = this.state.errors.description.message
     return (
             <Box direction='row'
               justify='center'
@@ -121,10 +126,11 @@ class Manage extends Component {
                 </Header>
                 <FormFields>
                   <FormField label='Description'
-                    error={`${error}`}>
+                    error={`${descriptionError}`}>
                     <TextInput 
                       id='description'
                       onDOMChange={this._handleChangeDescription.bind(this)}
+                      onBlur={this._handleOnBlurDescription.bind(this)}
                       />
                   </FormField>
                   <FormField>
@@ -133,7 +139,9 @@ class Manage extends Component {
                       format='M/D/YYYY'
                       onChange={this._onChangeDate.bind(this)}
                       onKeyPress={this._onKeyPressDate}
+                      onKeyDown={this._onKeyDownDate}
                       onPaste={this._onKeyPressDate}
+                      autoComplete='off'
                       value={this.state.deadline}
                     />
                   </FormField>

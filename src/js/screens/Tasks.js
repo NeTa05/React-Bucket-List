@@ -110,7 +110,7 @@ class Tasks extends Component {
           {task.deadline}
         </td>
         <td className='secondary'>
-          {icon} {task.status}
+          {icon}
         </td>
         <td className='secondary'>
           <Button 
